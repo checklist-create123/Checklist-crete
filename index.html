@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Treatment Setup Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7f7;--card:#fff;--ink:#1f3a3d;--mute:#6b7f82;--line:#dfe6e6;--acc:#b8566e;--acc-soft:#f6e6ea;--ok:#2f7d6d;--ok-soft:#e1f1ed;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a1b;--card:#1b2627;--ink:#e6efef;--mute:#8fa5a8;--line:#2c3b3d;--acc:#e08da3;--acc-soft:#3a2630;--ok:#6cc7b3;--ok-soft:#1d3733}}
+:root[data-theme="dark"]{--bg:#121a1b;--card:#1b2627;--ink:#e6efef;--mute:#8fa5a8;--line:#2c3b3d;--acc:#e08da3;--acc-soft:#3a2630;--ok:#6cc7b3;--ok-soft:#1d3733}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans Myanmar",system-ui,sans-serif;line-height:1.7}
+main{max-width:560px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.5rem;margin:8px 0 4px;font-weight:700}
+.sub{color:var(--mute);margin:0 0 20px;font-size:.95rem}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.tcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:12px}
+.tcard .ic{font-size:1.8rem;width:52px;height:52px;display:grid;place-items:center;background:var(--acc-soft);border-radius:14px}
+.tcard b{display:block;font-size:1.25rem}
+.tcard small{color:var(--mute)}
+.tcard .pct{margin-left:auto;font-weight:600;color:var(--ok)}
+.back{background:none;border:0;color:var(--acc);font-weight:600;padding:8px 0}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0 4px}
+.bar i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+.stat{display:flex;justify-content:space-between;color:var(--mute);font-size:.9rem;margin-bottom:18px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-bottom:12px;overflow:hidden}
+.step.done{border-color:var(--ok)}
+.sh{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;padding:14px 16px;text-align:left}
+.num{flex:none;width:30px;height:30px;border-radius:50%;background:var(--acc-soft);color:var(--acc);display:grid;place-items:center;font-weight:700;font-size:.9rem}
+.step.done .num{background:var(--ok);color:#fff}
+.st{flex:1;line-height:1.35}
+.st b{display:block}
+.st small{color:var(--mute)}
+.cnt{color:var(--mute);font-size:.9rem}
+.items{display:none;padding:0 12px 12px;grid-template-columns:1fr 1fr;gap:8px}
+.step.open .items{display:grid}
+.item{display:flex;align-items:center;gap:8px;background:var(--bg);border:2px solid transparent;border-radius:12px;padding:10px;text-align:left;min-height:52px}
+.item .e{font-size:1.3rem}
+.item span.t{flex:1;font-size:.9rem;line-height:1.3}
+.item .k{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.75rem;color:transparent}
+.item.on{border-color:var(--ok);background:var(--ok-soft)}
+.item.on .k{background:var(--ok);border-color:var(--ok);color:#fff}
+.note{grid-column:1/-1;font-size:.9rem;color:var(--mute);margin:4px 2px 0}
+.timer{grid-column:1/-1;background:var(--acc);color:#fff;border:0;border-radius:12px;padding:12px;font-weight:600}
+.reset{display:block;margin:20px auto 0;background:none;border:1px solid var(--line);border-radius:99px;padding:10px 20px;color:var(--mute)}
+.fin{display:none;background:var(--ok-soft);color:var(--ok);border-radius:14px;padding:14px;text-align:center;font-weight:600;margin-bottom:14px}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+var CLEAN={t:"Proper Cleansing",m:"မျက်နှာသန့်စင်ခြင်း",items:["Head Towel","Make up remover","Cleanser","Glass Jar","Water Bowl & Sponge","Bowl","Wet Tissue","Dust Bin","Tissue"]};
+function NUM(n,or){return {t:"Numbing Cream × "+n+" mins",m:"ထုံဆေးလိမ်းပြီး "+n+" မိနစ်ထားမယ်",timer:n,items:["Numbing Cream","Glass Container","Brush"].concat(or?["Plastic Mask / Plastic Wrap"]:["Plastic Mask","Plastic Wrap"])};}
+var GEL={t:"Gel/Cream Cleansing",m:"ထုံဆေးပြန်သုတ်သန့်စင်ခြင်း",items:["Silicone Spatula","Wet Tissue","Tissue"]};
+var AFT={t:"After Care",m:"ကုသပြီးနောက် စောင့်ရှောက်မှု",items:["Bioplacenton","Cotton Bud"]};
+function PROC(t,note){return {t:t,m:"ကုသမှု လုပ်ဆောင်ခြင်း",items:[],confirm:true,note:note};}
+var TREATMENTS = {
+ filler:{name:"Filler",icon:"💉",desc:"ဖိုလာ ထိုးဆေး",steps:[CLEAN,NUM(30),
+  {t:"Injections Preparation",m:"ထိုးဆေးပြင်ဆင်ခြင်း",items:["Filler ဆေးသေတ္တာ","Tray","Kidney Tray","Cannula"]},GEL,
+  {t:"Injections Preparation (၂)",m:"ထိုးဆေးပြင်ဆင်ခြင်း ဒုတိယအဆင့်",items:["Surgical Marker & Ruler","Ice Tube","Cotton Box"]},
+  PROC("Filler Procedure","ထိုးမယ့်နေရာများ - Eye Filler, Nose Filler, Cheek Filler, Smile Line Filler, Chin Filler"),AFT]},
+ botox:{name:"Botox",icon:"✨",desc:"ဘိုတော့ ထိုးဆေး",steps:[
+  {t:"Proper Cleansing",m:"မျက်နှာသန့်စင်ခြင်း",items:CLEAN.items.concat(["Mask","Glove"]),note:"Mask, Glove - စာရွက်ပေါ် လက်ရေးမှတ်ချက်ကနေ ထည့်ထားတာပါ။"},NUM(15),
+  {t:"Injections Preparation",m:"ထိုးဆေးပြင်ဆင်ခြင်း",items:["Botox","Tray","Kidney Tray","1cc × 1 or 2 pcs","30G × 1 or 2 pcs","32G × 1"],note:"ဆေးရောစပ်ပုံ (လက်ရေးမှတ်ချက်) - 100U → 2.5cc (3cc)၊ 200U → 5cc၊ N/S နဲ့ ရောပါ။"},GEL,
+  {t:"Injections Preparation (၂)",m:"ထိုးဆေးပြင်ဆင်ခြင်း ဒုတိယအဆင့်",items:["Surgical Marker & Ruler","Ice Tube","Cotton Box"]},
+  PROC("Botox Procedure"),AFT]},
+ dermashine:{name:"Skin Boosters (Dermashine)",icon:"🧪",desc:"Dermashine စက်နဲ့ ထိုးမယ့် Skin Booster",steps:[CLEAN,NUM(40,1),
+  {t:"Injection Preparation",m:"ထိုးဆေးပြင်ဆင်ခြင်း",items:["Dermaheal / Hyaron","18G","5cc","9 Pin","Tray","Kidney Tray","Derma shine Pro"]},GEL,
+  {t:"Injection Procedure",m:"ကုသမှု လုပ်ဆောင်ခြင်း",items:["Cotton Box"],confirm:true},AFT]},
+ manual:{name:"Skin Boosters (Manual)",icon:"💧",desc:"လက်ဖြင့်ထိုးမယ့် Skin Booster",steps:[CLEAN,NUM(40,1),
+  {t:"Injection Preparation",m:"ထိုးဆေးပြင်ဆင်ခြင်း",items:["Dermaheal / Hyaron","18G","1cc × 3 or 5","32G × 3 or 5","Tray","Kidney Tray"]},GEL,
+  {t:"Injection Procedure",m:"ကုသမှု လုပ်ဆောင်ခြင်း",items:["Cotton Box","Ice Cube","Surgical Marker & Ruler","Energy Bar"],confirm:true},AFT]},
+ thread:{name:"Collagen Thread",icon:"🧵",desc:"ကော်လဂျင် ချည်မျှင်",steps:[CLEAN,NUM(30,1),
+  {t:"Lidocaine Injection",m:"Lidocaine ထိုးခြင်း",items:["Trolley","N/S 500","Lidocaine","1cc × 2 pcs","3cc × 2 pcs","30G × 4 pcs","Cannula","Tray","Kidney Tray"]},
+  {t:"Thread",m:"Thread ပြင်ဆင်ခြင်း",items:["Trolley","Dressing Kit","Sterile pack (အညွှန်းမပါ)","Thread pack","Tray","Kidney Tray × 3"]},GEL,
+  PROC("Thread Procedure"),
+  {t:"Plaster, Antibiotic, Kemose, Diclo",m:"ကုသပြီးနောက် ပေးရမယ့်ဆေးများ",items:["Cotton Box","Plaster","Antibiotic","Kemose","Diclo"],note:"ပုံအောက်ခြေ ပြတ်နေလို့ ဒီအဆင့်ကို အကြမ်းဖျင်း ထည့်ထားတာပါ။"}]},
+ drip:{name:"Whitening Drip",icon:"🩸",desc:"အဖြူရောင် ဆေးရည်သွင်းခြင်း",steps:[
+  {t:"Set 1",m:"သွေးကြောထိုးရန် ပစ္စည်းများ",items:["Tourniquet","Arm Rest Pillow","Cotton Box"]},
+  {t:"Set 2",m:"ဆေးနဲ့ ဗန်းများ",items:["Drip ဆေးပုလင်း × 2","N/S ပုလင်း","Kidney Tray","Tray"]},
+  {t:"Set 3",m:"ထိုးအပ်နဲ့ ပိုက်များ",items:["20cc syringe","18G","IV Set","Butterfly / IV Cannula"]},
+  {t:"Set 4",m:"ချိတ်ဆွဲရန်",items:["IV Stand"]},
+  {t:"Drip Procedure",m:"ဆေးရည်သွင်းခြင်း",items:[],confirm:true,note:"စာရွက်မှာ အဆင့်အမည်မပါလို့ ပုံထဲက ၄ ပိုင်းအတိုင်း ခွဲထည့်ထားတာပါ။"}]},
+ hifu:{name:"HIFU",icon:"🔆",desc:"HIFU စက်ဖြင့် ကုသမှု",steps:[CLEAN,
+  {t:"Apply Numbing Cream × 30 mins",m:"ထုံဆေးလိမ်းပြီး ၃၀ မိနစ်ထားမယ်",timer:30,items:["Numbing Cream","Glass Container","Brush","Plastic Mask","Silicone Spatula"]},
+  {t:"Prepare HIFU Machine",m:"HIFU စက်ပြင်ဆင်ခြင်း",items:["Cartridge DS10-1.5","Cartridge DS7-3.0","Cartridge DS4-4.5"]},
+  {t:"Hifu Gel",m:"HIFU Gel ပြင်ဆင်ခြင်း",items:["Hifu Gel × 2","Glass Container","Brush"]},
+  PROC("HIFU Procedure"),
+  {t:"Gel/Cream Cleansing",m:"Gel/Cream သုတ်သန့်စင်ခြင်း",items:GEL.items},
+  {t:"Mask × 10 mins",m:"Mask ၁၀ မိနစ်ထားမယ်",timer:10,items:["Sheet Mask"]}]},
+ peel:{name:"Chemical Peeling",icon:"🍋",desc:"AHA/BHA အရေပြားလွှာ ကုသမှု",steps:[CLEAN,
+  {t:"AHA/BHA",m:"Peeling ဆေးလိမ်းခြင်း",items:["Peeling Solution","Glass Container","Brush","Water Bowl with Ice","Face Towel"]},
+  {t:"Sheet Mask × 10 mins",m:"Sheet Mask ၁၀ မိနစ်ထားမယ်",timer:10,items:["Sheet Mask"]}]},
+ mesofat:{name:"Mesofat (Body)",icon:"🔥",desc:"ခန္ဓာကိုယ် အဆီဖျော်ဆေး",steps:[
+  {t:"Cleansing",m:"သန့်စင်ခြင်း",items:["Wet Tissue","Tissue","Dust Bin"]},
+  {t:"Injection Preparation",m:"ထိုးဆေးပြင်ဆင်ခြင်း",items:["Lipo Lab","Lidocaine","18G","3cc × 4 pcs","30G × 4 pcs","Tray","Kidney Tray"]},
+  {t:"Injection Procedure",m:"ကုသမှု လုပ်ဆောင်ခြင်း",items:["Cotton Box","Ice Tube","Surgical Marker & Ruler"],confirm:true}]}
+};
+var IC=[["bud","🪥"],["kidney","🩺"],["tray","▫️"],["tissue","🧻"],["towel","🧻"],["remover","🧴"],["cleanser","🧴"],["jar","🫙"],["bowl","🥣"],["bin","🗑️"],["cream","🧴"],["container","🥛"],["brush","🖌️"],["sheet mask","😷"],["mask","😷"],["glove","🧤"],["wrap","🎞️"],["spatula","🥄"],["marker","🖊️"],["ice","🧊"],["cotton","📦"],["bioplacenton","🩹"],["plaster","🩹"],["lidocaine","💊"],["dermaheal","💊"],["antibiotic","💊"],["kemose","💊"],["diclo","💊"],["lipo","💊"],["botox","💉"],["cannula","💉"],["cc","💉"],["pin","💉"],["syringe","💉"],["butterfly","💉"],["g ","💉"],["trolley","🛒"],["n/s","💧"],["thread","🧵"],["dressing","📦"],["tourniquet","🎗️"],["stand","🧷"],["energy","⚡"],["shine","⚙️"],["cartridge","🔧"],["gel","🧴"],["peeling","🧪"],["pillow","🛏️"],["ဆေး","💊"]];
+function icon(n){var l=n.toLowerCase()+" ";for(var i=0;i<IC.length;i++){if(l.indexOf(IC[i][0])>-1)return IC[i][1];}return "▫️";}
+Object.keys(TREATMENTS).forEach(function(k){TREATMENTS[k].steps.forEach(function(s){s.items=s.items.map(function(n){return typeof n==="string"?[icon(n),n]:n;});});});
+
+var SB_B="Skin Booster က အရေပြားကို ရေဓာတ်ပြည့်စေပြီး ကြည်လင်စေဖို့ပါ။ ဆေးအလူးအလဲ့၊ ကိုယ်ဝန်၊ အရေပြားရောင်ရမ်းနေခြင်း ရှိမရှိ မေးပါရစေ။ ထုံဆေး ၄၀ မိနစ် ထားပါမယ်။";
+var SB_A="အနီရောင်၊ အဖုလေးတွေ နာရီအနည်းငယ်ကနေ ၁-၂ ရက် ရှိနိုင်ပါတယ်။ ၂၄ နာရီ မိတ်ကပ် မလိမ်းပါနဲ့၊ နေရောင်ကာကွယ်ပါ။ ပေးထားတဲ့ ဆေးလိမ်းကို ညွှန်ကြားတဲ့အတိုင်း သုံးပါ။";
+var TALK={
+filler:["ဒီနေ့ ဖိုလာထိုးမယ့်နေရာကို အတူ အတည်ပြုကြရအောင်ပါ။ ဆေးအလူးအလဲ့၊ ကိုယ်ဝန်၊ သွေးပါးဆေး သောက်နေခြင်း ရှိမရှိ အရင်မေးပါရစေ။ ထုံဆေးလိမ်းပြီး ၃၀ မိနစ် စောင့်ရပါမယ်။","ထိုးနေစဉ် ဖိသလို၊ အနည်းငယ် ကိုက်သလို ခံစားရနိုင်ပါတယ်။ အရမ်းနာရင် ချက်ချင်း ပြောပေးပါနော်။","ပထမ ၂၄ နာရီ ထိုးထားတဲ့နေရာကို မပွတ်၊ မနှိပ်ပါနဲ့။ အနည်းငယ် ရောင်ခြင်း၊ ပြာမဲခြင်း ဖြစ်နိုင်ပါတယ်။ အရမ်းနာလာတာ၊ အရေပြားအရောင် ဖြူ/မှောင်လာတာ၊ မျက်စိမှုန်တာ ဖြစ်ရင် ချက်ချင်း clinic ကို ဆက်သွယ်ပါ။"],
+botox:["ဘိုတော့ ထိုးမယ့်နေရာတွေကို အတူကြည့်ကြရအောင်ပါ။ ကိုယ်ဝန်၊ နို့တိုက်နေခြင်း၊ ကြွက်သားအာရုံကြော ရောဂါ၊ ဆေးအလူးအလဲ့ ရှိမရှိ မေးပါရစေ။ ထုံဆေး ၁၅ မိနစ် ထားပါမယ်။","အပ်သေးသေးနဲ့ ထိုးမှာမို့ အနည်းငယ်ပဲ နာပါမယ်။ မျက်နှာကို မလှုပ်ဘဲ ငြိမ်ငြိမ်လေး နေပေးပါ။","ပထမ ၄ နာရီ မအိပ်ပါနဲ့၊ ထိုးနေရာကို မပွတ်ပါနဲ့။ ၂၄ နာရီ ပြင်းထန်တဲ့ လေ့ကျင့်ခန်း၊ ရေနွေးအငွေ့၊ ဆော်နာ ရှောင်ပါ။ ပြည့်ပြည့်ဝဝ ထိရောက်မှုက ရက်အနည်းငယ် ကြာပါမယ်။"],
+dermashine:[SB_B,"စက်နဲ့ အပ်သေးသေးတွေ အကြိမ်များစွာ ထိုးသွားမှာမို့ အနည်းငယ် ကိုက်သလို ခံစားရနိုင်ပါတယ်။ နာရင် ပြောပါ။",SB_A],
+manual:[SB_B,"အပ်သေးသေးနဲ့ အချက်လေးတွေ ထိုးသွားမှာပါ။ နာရင် ပြောပေးပါ။",SB_A],
+thread:["Thread ထည့်မယ့်နေရာနဲ့ အရေအတွက်ကို ရှင်းပြပါမယ်။ ဆေးအလူးအလဲ့ (Lidocaine အပါအဝင်)၊ ကိုယ်ဝန်၊ သွေးခဲမှု ပြဿနာ၊ သောက်နေတဲ့ဆေး မေးပါရစေ။ ထုံဆေးလိမ်းပြီး Lidocaine ထိုးပါမယ်။","ထုံပြီးနောက် ဆွဲသလို၊ ဖိသလို ခံစားရနိုင်ပါတယ်။ အရမ်းနာရင် ပြောပါ။","ပထမ ရက်အနည်းငယ် မျက်နှာကို အကြီးအကျယ် မလှုပ်ပါနဲ့၊ ပါးစပ်ကို အကျယ်ကြီး မဟပါနဲ့၊ အစာပျော့ပျော့ စားပါ၊ ပက်လက်အိပ်ပါ။ ပေးတဲ့ ဆေးတွေကို ညွှန်ကြားတဲ့အတိုင်း သောက်ပါ။ ပြင်းထန်တဲ့ နာကျင်မှု၊ ပြည်တည်ခြင်း၊ ဖျားခြင်း ဖြစ်ရင် ချက်ချင်း ဆက်သွယ်ပါ။"],
+drip:["ဆေးရည်ကို သွေးကြောကနေ ဖြည်းဖြည်းချင်း သွင်းမှာပါ။ ဆေးအလူးအလဲ့၊ ကိုယ်ဝန်၊ အသည်း/ကျောက်ကပ် ရောဂါ၊ သောက်နေတဲ့ဆေး မေးပါရစေ။","အပ်ထိုးတဲ့အချိန် အနည်းငယ် နာပါမယ်။ ဆေးသွင်းနေစဉ် ကိုယ်ပူလာတာ၊ ယားတာ၊ အသက်ရှူခက်တာ ခံစားရရင် ချက်ချင်း ပြောပါ။","ပြီးရင် ခဏ ထိုင်နားပါ၊ ရေများများ သောက်ပါ။ အပ်ထိုးနေရာကို မိနစ်အနည်းငယ် ဖိထားပါ။ ပြာမဲခြင်း အနည်းငယ် ဖြစ်နိုင်ပါတယ်။ မကောင်းတဲ့ လက္ခဏာ ဖြစ်ရင် ဆက်သွယ်ပါ။"],
+hifu:["HIFU က အရေပြားကို တင်းရင်းစေတဲ့ စက်ကုသမှုပါ။ ကိုယ်ဝန်၊ Pacemaker၊ ကုသမယ့်နေရာမှာ ဖြည့်ဆေး/အနာ ရှိမရှိ မေးပါရစေ။ ထုံဆေး ၃၀ မိနစ် ထားပါမယ်။","စက်ထိတဲ့အခါ အပူ၊ ကိုက်သလို ခံစားရနိုင်ပါတယ်။ မခံနိုင်ရင် ချက်ချင်း ပြောပါ။","အနည်းငယ် နီခြင်း၊ ကျိန်းခြင်း ရှိနိုင်ပါတယ်။ နေရောင်ကာကွယ်ပါ၊ ပြင်းထန်တဲ့ ပွတ်တိုက်ခြင်း အချိန်အနည်းငယ် ရှောင်ပါ။ တင်းလာတာကို ရက်သတ္တပတ်အနည်းငယ်အတွင်း ဖြည်းဖြည်း တွေ့ရပါမယ်။"],
+peel:["Peeling က အရေပြားအလွှာကို ဖြည်းဖြည်း ခွာပေးတာပါ။ အရေပြားအနာ၊ နေလောင်ထားခြင်း၊ ကိုယ်ဝန်၊ Retinoid သုံးနေခြင်း မေးပါရစေ။","အနည်းငယ် ကျိန်း၊ ယားတာ ခံစားရနိုင်ပါတယ်။ မခံနိုင်ရင် ပြောပါ၊ ချက်ချင်း ရေနဲ့ ဆေးပေးပါမယ်။","အရေပြား ခြောက်သွေ့၊ အခွံလေးတွေ လန်နိုင်ပါတယ်၊ လက်နဲ့ မခွာပါနဲ့။ ရေဓာတ်ဖြည့်ခရင်မ်နဲ့ နေရောင်ကာကွယ်ခရင်မ် မဖြစ်မနေ သုံးပါ။"],
+mesofat:["ခန္ဓာကိုယ်အဆီဖျော်ဆေး ထိုးမယ့်နေရာတွေကို အမှတ်အသားလုပ်ပါမယ်။ ဆေးအလူးအလဲ့ (Lidocaine အပါအဝင်)၊ ကိုယ်ဝန်၊ သွေးဆိုင်ရာ ပြဿနာ မေးပါရစေ။","အပ်ထိုးတဲ့အခါ အနည်းငယ် နာပြီး ဆေးဝင်တဲ့အခါ ကျိန်းသလို ဖြစ်နိုင်ပါတယ်။","ထိုးနေရာ ရောင်၊ ပြာမဲ၊ နာတာ ရက်အနည်းငယ် ရှိနိုင်ပါတယ်။ ရေများများ သောက်ပါ။ ပြင်းထန်တဲ့ နာကျင်မှု၊ အပူ၊ ပြည်တည်တာ ဖြစ်ရင် ဆက်သွယ်ပါ။"]
+};
+function talkHTML(id){var t=TALK[id];if(!t)return "";var L=["ကုသမှု မစခင်","ကုသနေစဉ်","ကုသပြီးနောက်"],h='<section class="step'+(openStep[id+"talk"]?' open':'')+'"><button class="sh" data-step="talk"><span class="num">💬</span><span class="st"><b>လူနာကို ပြောရမယ့်စကား</b><small>မူကြမ်း - ဆရာဝန်နဲ့ အတည်ပြုပါ</small></span></button><div class="items">';for(var i=0;i<3;i++)h+='<p class="note" style="color:var(--ink)"><b>'+L[i]+'</b><br>'+t[i]+'</p>';return h+'</div></section>';}
+
+var state = {}; // {treatmentId: {"s-i": true}}
+try { state = JSON.parse(localStorage.getItem("setup-state") || "{}"); } catch (e) { state = {}; }
+function save(){ try { localStorage.setItem("setup-state", JSON.stringify(state)); } catch (e) {} }
+
+
+var T=null, AC=null, WL=null, alarmId=null;
+function stopAll(){ clearInterval(alarmId); alarmId=null; T=null; try{ if(WL) WL.release(); }catch(e){} WL=null; var x=document.querySelectorAll(".timer"); for(var i=0;i<x.length;i++) x[i].textContent="⏱ "+x[i].dataset.timer+" မိနစ် အချိန်မှတ်မယ်"; }
+function beep(){ try{ var o=AC.createOscillator(), g=AC.createGain(); o.connect(g); g.connect(AC.destination); o.frequency.value=880; g.gain.value=0.4; o.start(); o.stop(AC.currentTime+0.35); }catch(e){} try{ if(navigator.vibrate) navigator.vibrate(400); }catch(e){} }
+function tick(){
+  if(!T) return;
+  var btn=document.querySelector('.timer[data-tk="'+T.key+'"]'), left=Math.max(0,T.end-Date.now());
+  if(left>0){ var m=Math.floor(left/60000), sc=Math.floor(left%60000/1000); if(btn) btn.textContent="⏱ "+m+":"+(sc<10?"0":"")+sc+" ကျန်ပါသေးတယ် (ရပ်ရန် နှိပ်ပါ)"; return; }
+  if(!T.fired){ T.fired=true; beep(); alarmId=setInterval(beep,900); }
+  if(btn) btn.textContent="⏰ အချိန်ပြည့်ပါပြီ! သုတ်ရန် - အသံပိတ်ဖို့ နှိပ်ပါ";
+}
+setInterval(tick,500);
+var app = document.getElementById("app");
+var openStep = {};
+
+function total(tr){ var n=0; tr.steps.forEach(function(s){ n += s.items.length || (s.confirm?1:0); }); return n; }
+function checked(id){ return Object.keys(state[id] || {}).length; }
+function stepDone(id, si, s){
+  var c = s.items.length || (s.confirm ? 1 : 0), d = 0, st = state[id] || {};
+  if (s.items.length) s.items.forEach(function(_, i){ if (st[si+"-"+i]) d++; }); else if (st[si+"-c"]) d = 1;
+  return [d, c];
+}
+
+function home(){
+  var h = '<h1>Setup Checklist</h1><p class="sub">ကုသမှုတစ်ခုကို နှိပ်ပြီး ပြင်ဆင်ရမယ့် ပစ္စည်းတွေကို အဆင့်လိုက် ကြည့်ပါ။</p>';
+  Object.keys(TREATMENTS).forEach(function(id){
+    var tr = TREATMENTS[id], p = Math.round(100 * checked(id) / total(tr));
+    h += '<button class="tcard" data-go="'+id+'"><span class="ic">'+tr.icon+'</span><span><b>'+tr.name+'</b><small>'+tr.desc+'</small></span>'+(p?'<span class="pct">'+p+'%</span>':'')+'</button>';
+  });
+  app.innerHTML = h;
+}
+
+function detail(id){
+  var tr = TREATMENTS[id], st = state[id] || {}, tot = total(tr), done = checked(id), p = Math.round(100*done/tot);
+  var h = '<button class="back" data-home>‹ နောက်သို့</button><h1>'+tr.name+'</h1>';
+  h += '<div class="bar"><i style="width:'+p+'%"></i></div><div class="stat"><span>'+done+' / '+tot+' ပြင်ဆင်ပြီး</span><span>'+p+'%</span></div>';
+  h += '<div class="fin" style="display:'+(done===tot?'block':'none')+'">အားလုံး ပြင်ဆင်ပြီးပါပြီ ✓</div>';
+  h += talkHTML(id);
+  tr.steps.forEach(function(s, si){
+    var r = stepDone(id, si, s), isDone = r[0] === r[1];
+    h += '<section class="step'+(isDone?' done':'')+(openStep[id+si]?' open':'')+'">';
+    h += '<button class="sh" data-step="'+si+'"><span class="num">'+(isDone?'✓':(si+1))+'</span><span class="st"><b>'+s.t+'</b><small>'+s.m+'</small></span><span class="cnt">'+r[0]+'/'+r[1]+'</span></button>';
+    h += '<div class="items">';
+    s.items.forEach(function(it, i){
+      var k = si+"-"+i;
+      h += '<button class="item'+(st[k]?' on':'')+'" data-k="'+k+'"><span class="e">'+it[0]+'</span><span class="t">'+it[1]+'</span><span class="k">✓</span></button>';
+    });
+    if (s.confirm){ var kc = si+"-c"; h += '<button class="item'+(st[kc]?' on':'')+'" data-k="'+kc+'" style="grid-column:1/-1"><span class="e">✅</span><span class="t">ကုသမှု ပြီးပါပြီ</span><span class="k">✓</span></button>'; }
+    if (s.note) h += '<p class="note">'+s.note+'</p>';
+    if (s.timer) h += '<button class="timer" data-timer="'+s.timer+'" data-tk="'+id+si+'">⏱ '+s.timer+' မိနစ် အချိန်မှတ်မယ်</button>';
+    h += '</div></section>';
+  });
+  h += '<button class="reset" data-reset>အစကပြန်စမယ်</button>';
+  app.innerHTML = h;
+}
+
+var current = null;
+function show(id){ current = id; if (id) detail(id); else home(); window.scrollTo(0,0); }
+function refresh(){ var y = window.scrollY; detail(current); window.scrollTo(0,y); }
+
+app.addEventListener("click", function(e){
+  var b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.go) return show(b.dataset.go);
+  if (b.hasAttribute("data-home")) return show(null);
+  if (b.dataset.step !== undefined){ var key = current+b.dataset.step; openStep[key] = !openStep[key]; return refresh(); }
+  if (b.dataset.k){
+    state[current] = state[current] || {};
+    if (state[current][b.dataset.k]) delete state[current][b.dataset.k]; else state[current][b.dataset.k] = true;
+    save(); return refresh();
+  }
+  if (b.hasAttribute("data-reset")){ if (confirm("အစကပြန်စမလား? အမှတ်အသားအားလုံး ပျက်သွားပါမယ်။")){ state[current] = {}; save(); refresh(); } return; }
+  if (b.dataset.timer){
+    var k = b.dataset.tk;
+    if (T && T.key === k) { stopAll(); return; }
+    stopAll();
+    try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); AC.resume(); } catch (e) {}
+    try { navigator.wakeLock.request("screen").then(function(l){ WL = l; }).catch(function(){}); } catch (e) {}
+    T = {key:k, end:Date.now() + b.dataset.timer * 60000, mins:b.dataset.timer, fired:false};
+    tick();
+  }
+});
+home();
+</script>
+</body>
+</html>
